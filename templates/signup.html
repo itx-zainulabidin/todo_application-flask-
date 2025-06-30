@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -20,4 +20,27 @@
         <a href="/login" class="btn btn-link">Login</a>
     </form>
 </body>
-</html>
+</html> -->
+
+{% extends 'base.html' %}
+
+{% block title %}Signup{% endblock title %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <h2>Signup</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label>Username</label>
+            <input name="username" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Password</label>
+            <input name="password" type="password" class="form-control" required>
+        </div>
+        <button class="btn btn-primary">Signup</button>
+        <a href="/login" class="btn btn-link">Login</a>
+    </form>
+</div>
+
+{% endblock content %}
