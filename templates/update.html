@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -15,4 +15,20 @@
         <a href="/todos" class="btn btn-secondary">Cancel</a>
     </form>
 </body>
-</html>
+</html> -->
+{% extends 'base.html' %}
+
+{% block title %}Update Todo{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <h2>Update Todo</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <input name="content" class="form-control" value="{{ todo.content }}" required>
+        </div>
+        <button class="btn btn-primary">Update</button>
+        <a href="/todos" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock content %}
