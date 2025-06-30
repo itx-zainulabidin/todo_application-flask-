@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock title %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    
+    <h2>Login</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label>Username</label>
+            <input name="username" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Password</label>
+            <input name="password" type="password" class="form-control" required>
+        </div>
+        <button class="btn btn-success">Login</button>
+        <a href="/signup" class="btn btn-link">Signup</a>
+    </form>
+</div>
+
+{% endblock content %}

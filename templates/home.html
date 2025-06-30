@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <h4>Welcome to the Todo App</h4>
+    <p>Your one-stop solution for managing tasks efficiently.</p>
+    <a href="{{ url_for('signup') }}" class="btn btn-primary">Sign Up</a>
+    <a href="{{ url_for('login') }}" class="btn btn-secondary">Login</a>
+</div>
+{% endblock content %}
