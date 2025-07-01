@@ -7,23 +7,24 @@ import os
 app = Flask(__name__)
 app.secret_key = 'a secret_key'
 
-# Configure DB
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'todos.db')
 db = SQLAlchemy(app)
 
-# User Model
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(200), nullable=False)
-    todos = db.relationship('Todo', backref='user', lazy=True)
+    username = db.Column(db.String(150), unique=True, nullable=False)
+    password_hash = db.Column(db.String(150), nullable=False)
 
-# Todo Model
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+    
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(200), nullable=False)
-    # discription = db.Column(db.String(500), nullable=True)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
@@ -35,22 +36,24 @@ def home():
 def signup():
     if request.method == 'POST':
         username = request.form['username']
-        password = generate_password_hash(request.form['password'])
+        password = request.form['password']
         if User.query.filter_by(username=username).first():
-            flash('Username already exists')
-            return redirect(url_for('signup'))
-        new_user = User(username=username, password=password)
+            flash("Username already exists")
+            return redirect('/signup')
+
+        new_user = User(username=username)
+        new_user.set_password(password)
         db.session.add(new_user)
         db.session.commit()
-        flash('Account created, please login')
-        return redirect(url_for('login'))
+        flash("Account created")
+        return redirect('/login')
     return render_template('signup.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         user = User.query.filter_by(username=request.form['username']).first()
-        if user and check_password_hash(user.password, request.form['password']):
+        if user and user.check_password(request.form['password']):
             session['user_id'] = user.id
             session['username'] = user.username
             return redirect(url_for('todos'))
@@ -100,4 +103,4 @@ def update(id):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(debug=True,port=100)
+    app.run(debug=True, port=100)

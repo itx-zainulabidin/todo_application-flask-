@@ -1,16 +1,20 @@
-{% extends 'base.html' %}
-
-{% block title %}Update Todo{% endblock title %}
-
-{% block content %}
-<div class="container py-5">
-    <h2>Update Todo</h2>
-    <form method="POST">
-        <div class="mb-3">
-            <input name="content" class="form-control" value="{{ todo.content }}" required>
-        </div>
-        <button class="btn btn-primary">Update</button>
-        <a href="/todos" class="btn btn-secondary">Cancel</a>
-    </form>
-</div>
-{% endblock content %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Update Todo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Update Todo</h2>
+        <form method="POST">
+            <div class="mb-3">
+                <input name="content" class="form-control" value="{{ todo.content }}" required>
+            </div>
+            <button class="btn btn-primary">Update</button>
+            <a href="/todos" class="btn btn-link">Back</a>
+        </form>
+    </div>
+</body>
+</html>
