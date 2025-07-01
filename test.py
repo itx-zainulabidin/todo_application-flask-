@@ -1,3 +1,5 @@
+# test.py
+# This file contains unit tests for the Flask Todo application.
 import unittest
 from app import app, db, User, Todo
 
@@ -11,7 +13,7 @@ class FlaskTodoAppTestCase(unittest.TestCase):
 
     def tearDown(self):
         with app.app_context():
-            pass
+            db.drop_all()
 
     def register_user(self, username, password):
         return self.app.post('/signup', data=dict(
@@ -27,9 +29,10 @@ class FlaskTodoAppTestCase(unittest.TestCase):
 
     def test_user_signup_and_login(self):
         response = self.register_user('testuser', 'testpass')
-        self.assertIn(b'Account created', response.data)
+        self.assertIn(b'Login', response.data)  # redirected to login page
+
         response = self.login_user('testuser', 'testpass')
-        self.assertIn(b'Todo', response.data)
+        self.assertIn(b'Your Todos', response.data)
 
     def test_duplicate_signup(self):
         self.register_user('testuser', 'testpass')
@@ -49,18 +52,21 @@ class FlaskTodoAppTestCase(unittest.TestCase):
     def test_delete_todo(self):
         with app.app_context():
             user = User(username='deleter')
-            user.set_password('deleterpass')
+            user.set_password('hashed')
             db.session.add(user)
             db.session.commit()
-            todo = Todo(content='Delete this', user_id=user.id)
+            user_id = user.id
+            username = user.username
+
+            todo = Todo(content='Delete this', user_id=user_id)
             db.session.add(todo)
             db.session.commit()
             todo_id = todo.id
 
-        self.login_user('deleter', 'deleterpass')
+        self.login_user(username, 'hashed')
         with self.app.session_transaction() as sess:
-            sess['user_id'] = user.id
-            sess['username'] = user.username
+            sess['user_id'] = user_id
+            sess['username'] = username
 
         response = self.app.get(f'/delete/{todo_id}', follow_redirects=True)
         self.assertNotIn(b'Delete this', response.data)
@@ -68,21 +74,25 @@ class FlaskTodoAppTestCase(unittest.TestCase):
     def test_update_todo(self):
         with app.app_context():
             user = User(username='updater')
-            user.set_password('updaterpass')
+            user.set_password('hashed')
             db.session.add(user)
             db.session.commit()
-            todo = Todo(content='Old content', user_id=user.id)
+            user_id = user.id
+            username = user.username
+
+            todo = Todo(content='Old content', user_id=user_id)
             db.session.add(todo)
             db.session.commit()
             todo_id = todo.id
 
-        self.login_user('updater', 'updaterpass')
+        self.login_user(username, 'hashed')
         with self.app.session_transaction() as sess:
-            sess['user_id'] = user.id
-            sess['username'] = user.username
+            sess['user_id'] = user_id
+            sess['username'] = username
 
         response = self.app.post(f'/update/{todo_id}', data={'content': 'New content'}, follow_redirects=True)
         self.assertIn(b'New content', response.data)
+
 
 if __name__ == '__main__':
     unittest.main()
