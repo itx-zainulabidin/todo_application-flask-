@@ -1,32 +1,27 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container mt-5">
-        <h2>Login</h2>
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            {% for msg in messages %}
-              <div class="alert alert-danger">{{ msg }}</div>
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
-        <form method="POST">
-            <div class="mb-3">
-                <label>Username</label>
-                <input name="username" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label>Password</label>
-                <input name="password" type="password" class="form-control" required>
-            </div>
-            <button class="btn btn-success">Login</button>
-            <a href="/signup" class="btn btn-link">Signup</a>
-        </form>
+{% extends 'base.html' %}
+{% block title %}Login{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>Login</h2>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for msg in messages %}
+  <div class="alert alert-danger">{{ msg }}</div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+  <form method="POST">
+    <div class="mb-3">
+      <label>Username</label>
+      <input name="username" class="form-control" required>
     </div>
-</body>
-</html>
+    <div class="mb-3">
+      <label>Password</label>
+      <input name="password" type="password" class="form-control" required>
+    </div>
+    <button class="btn btn-success">Login</button>
+    <a href="/signup" class="btn btn-link">Signup</a>
+  </form>
+</div>
+{% endblock content %}
